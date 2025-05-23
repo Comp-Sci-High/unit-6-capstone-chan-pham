@@ -1,0 +1,50 @@
+/* FAQ Page Styling */
+.faq-page {
+    display: block;
+}
+
+.faq-header {
+    color: var(--primary-dark);
+    margin-bottom: 4rem;
+    text-align: center;
+}
+
+.faq-list {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--gray);
+    padding-bottom: 1.5rem;
+}
+
+.faq-question {
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.faq-question::after {
+    content: '+';
+    font-size: 1.5rem;
+}
+
+.faq-question.active::after {
+    content: '-';
+}
+
+.faq-answer {
+    display: none;
+    padding-top: 0.5rem;
+    line-height: 1.6;
+}
+
+.faq-answer.active {
+    display: block;
+}

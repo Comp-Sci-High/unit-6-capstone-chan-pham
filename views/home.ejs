@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni Success | Home</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="nav-left">
+                <a href="/" class="active">Home</a>
+                <a href="/transcript">Transcripts</a>
+            </div>
+            <div class="logo">
+                <h1>Alumni Success</h1>
+            </div>
+            <div class="nav-right">
+                <a href="/alumni">Alumni</a>
+                <a href="/faq">FAQ</a>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div class="mobile-menu">
+            <a href="/" class="active">Home</a>
+            <a href="/transcript">Transcripts</a>
+            <a href="/alumni">Alumni</a>
+            <a href="/faq">FAQ</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Welcome to Alumni Success</h1>
+                <p>Your gateway to resources, connections, and success stories</p>
+                <a href="#resources" class="btn-primary">Explore Resources</a>
+            </div>
+        </section>
+
+        <section id="resources" class="resources">
+            <h2>Resources & Information</h2>
+            <div class="resources-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Academic Support</h3>
+                    <p>Access tutoring services, study materials, and academic advisors.</p>
+                    <a href="#" class="btn-secondary">Learn More</a>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h3>Career Services</h3>
+                    <p>Resume reviews, interview prep, and job placement assistance.</p>
+                    <a href="#" class="btn-secondary">Learn More</a>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Networking Events</h3>
+                    <p>Connect with alumni and industry professionals at our events.</p>
+                    <a href="#" class="btn-secondary">Learn More</a>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <h3>Scholarships</h3>
+                    <p>Find financial support opportunities for continued education.</p>
+                    <a href="#" class="btn-secondary">Learn More</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="updates">
+            <h2>Latest Updates</h2>
+            <div class="update-feed" id="update-feed">
+                <!-- Update items will be inserted here from JS -->
+            </div>
+        </section>
+
+        <section class="important-info">
+            <h2>Important Information</h2>
+            <div class="info-cards">
+                <div class="info-card">
+                    <h3>Alumni Reunion 2025</h3>
+                    <p>Save the date for our annual reunion happening on June 15-17, 2025. Early registration opens next month!</p>
+                    <div class="info-meta">
+                        <span class="date">May 10, 2025</span>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <h3>New Mentorship Program</h3>
+                    <p>We're launching a revamped mentorship program connecting current students with successful alumni in their fields.</p>
+                    <div class="info-meta">
+                        <span class="date">May 5, 2025</span>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <h3>Summer Workshops</h3>
+                    <p>Registration is now open for our professional development summer workshops series. Limited spots available!</p>
+                    <div class="info-meta">
+                        <span class="date">April 28, 2025</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <h2>Alumni Success</h2>
+            </div>
+            <div class="footer-links">
+                <div class="link-group">
+                    <h3>Pages</h3>
+                    <a href="home.html">Home</a>
+                    <a href="transcript.html">Transcripts</a>
+                    <a href="alumni.html">Alumni</a>
+                    <a href="faq.html">FAQ</a>
+                </div>
+                <div class="link-group">
+                    <h3>Resources</h3>
+                    <a href="#">Career Services</a>
+                    <a href="#">Networking</a>
+                    <a href="#">Events</a>
+                </div>
+                <div class="link-group">
+                    <h3>Contact</h3>
+                    <a href="mailto:alumni@example.com">alumni@example.com</a>
+                    <a href="tel:+11234567890">+1 (123) 456-7890</a>
+                </div>
+            </div>
+            <div class="social-links">
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Alumni Success. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="home.js"></script>
+</body>
+</html>

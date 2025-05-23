@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni Success - Transcripts</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="transcript.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <div class="nav-left">
+                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link" href="/transcript">Transcripts</a>
+            </div>
+            <div class="nav-center">Alumni Success</div>
+            <div class="nav-right">
+                <a class="nav-link active" href="/alumni">Alumni</a>
+                <a class="nav-link" href="/faq">FAQ</a>
+            </div>
+        </nav>
+
+        <div class="page-container transcripts-page fade-in">
+            <div class="transcript-form">
+                <h2 class="form-title">Request or Send Transcripts</h2>
+                <form id="transcript-form">
+                    <div class="form-group">
+                        <label class="form-label" for="request-type">Request Type</label>
+                        <select class="form-select" id="request-type" required>
+                            <option value="">Select an option</option>
+                            <option value="request">Request My Transcript</option>
+                            <option value="send">Send My Transcript to College/University</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="full-name">Full Name</label>
+                        <input type="text" class="form-input" id="full-name" placeholder="Enter your full name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="graduation-year">Graduation Year</label>
+                        <input type="number" class="form-input" id="graduation-year" placeholder="Enter your graduation year" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input type="email" class="form-input" id="email" placeholder="Enter your email address" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="phone">Phone Number</label>
+                        <input type="tel" class="form-input" id="phone" placeholder="Enter your phone number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="destination">Destination (if sending)</label>
+                        <input type="text" class="form-input" id="destination" placeholder="College/University name or email">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="notes">Additional Notes</label>
+                        <textarea class="form-textarea" id="notes" placeholder="Any specific instructions or information"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="form-submit">Submit Request</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="transcript.js"></script>
+</body>
+</html>
