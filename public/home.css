@@ -144,7 +144,7 @@ header.scrolled {
 /* Hero Section */
 .hero {
     height: 80vh;
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://source.unsplash.com/random/1600x900/?university') no-repeat center center/cover;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('alumni-group.jpeg') no-repeat center center/cover;
     display: flex;
     align-items: center;
     justify-content: center;

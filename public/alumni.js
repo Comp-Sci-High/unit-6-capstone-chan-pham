@@ -335,54 +335,9 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
     
-    async function addAlumni(data) {
-        try {
-            const response = await fetch('/add/alumni', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            });
-            
-            if (response.ok) {
-                location.reload(); // Refresh page to show new alumni
-            } else {
-                alert('Error adding alumni');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Error adding alumni');
-        }
-    }
+   
     
-    async function updateAlumni(cardId, field, newValue) {
-        try {
-            const response = await fetch(`/alumni/${cardId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ [field]: newValue })
-            });
-            
-            if (response.ok) {
-                // Update the display immediately
-                const card = document.querySelector(`[data-card-id="${cardId}"]`).closest('.card');
-                updateCardDisplay(card, field, newValue);
-                
-                // Add success animation
-                card.classList.add('success-animation');
-                setTimeout(() => card.classList.remove('success-animation'), 300);
-            } else {
-                alert('Error updating alumni');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Error updating alumni');
-        }
-    }
-    
+   
     function updateCardDisplay(card, field, newValue) {
         const cardBack = card.querySelector('.card-back');
         let element;
@@ -421,26 +376,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    async function deleteAlumni(cardId) {
-        try {
-            const response = await fetch(`/delete/alumni/${cardId}`, {
-                method: 'DELETE'
-            });
-            
-            if (response.ok) {
-                // Remove card with animation
-                const card = document.querySelector(`[data-card-id="${cardId}"]`).closest('.card');
-                card.style.transform = 'scale(0)';
-                card.style.opacity = '0';
-                setTimeout(() => card.remove(), 300);
-            } else {
-                alert('Error deleting alumni');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Error deleting alumni');
-        }
-    }
+    
     
     // Close modal when clicking outside
     document.addEventListener('click', function(e) {
@@ -449,3 +385,39 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+
+
+ async function deleteAlumni(id) {
+    await fetch('/delete/alumni/' + id, {method:'DELETE'})
+    window.location.href="/alumni"
+}
+
+// Task 6: Write the update student function using ID
+
+async function updateAlumni(e, id) {
+ const formData = new FormData(e.target);
+ const formObject = Object.fromEntries(formData.entries());
+
+ await fetch('/alumni/' + id, {
+   method: 'PATCH',
+   headers: { 'Content-Type': 'application/json' },
+   body: JSON.stringify(formObject)
+ });
+
+ window.location.href = '/alumni'
+
+}
+
+
+     async function addAlumni(data) {
+            const response = await fetch('/add/alumni', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+ window.location.href = '/alumni'
+        
+        }
