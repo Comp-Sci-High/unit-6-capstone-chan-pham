@@ -23,17 +23,9 @@
 
         <div class="page-container transcripts-page fade-in">
             <div class="transcript-form">
-                <h2 class="form-title">Request or Send Transcripts</h2>
-                <!-- Removed Formspree action to allow EmailJS to work -->
+                <h2 class="form-title">Request Transcripts</h2>
                 <form id="transcript-form">
-                    <div class="form-group">
-                        <label class="form-label" for="request-type">Request Type</label>
-                        <select class="form-select" id="request-type" name="request-type" required>
-                            <option value="">Select an option</option>
-                            <option value="request">Request My Transcript</option>
-                            <option value="send">Send My Transcript</option>
-                        </select>
-                    </div>
+                    <!-- Removed request type dropdown since only requesting is available -->
                     
                     <div class="form-group">
                         <label class="form-label" for="full-name">Full Name</label>
@@ -55,14 +47,9 @@
                         <input type="email" class="form-input" id="recipient-email" name="recipient-email" placeholder="Enter recipient's email address" value="brandon.thomas25@compscihigh.org" required>
                     </div>
                     
-                    <!-- File upload field - initially hidden -->
-                    <div class="form-group file-upload-section" id="file-upload-group">
-                        <label class="form-label" for="transcript-file">Upload Transcript Document</label>
-                        <input type="file" class="form-input file-input" id="transcript-file" name="transcript-file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
-                        <small class="file-help">Accepted formats: PDF, DOC, DOCX, JPG, PNG (Max 10MB)</small>
-                    </div>
+                    <!-- File upload section removed since we're only doing requests -->
                     
-                    <button type="submit" class="form-submit" id="submit-btn">Submit Request</button>
+                    <button type="submit" class="form-submit" id="submit-btn">Request Transcript</button>
                 </form>
             </div>
         </div>

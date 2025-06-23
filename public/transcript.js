@@ -9,10 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize EmailJS
     emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
 
-    // Get all form elements
-    const requestTypeSelect = document.getElementById('request-type');
-    const fileUploadGroup = document.getElementById('file-upload-group');
-    const transcriptFileInput = document.getElementById('transcript-file');
+    // Get form elements
     const form = document.getElementById('transcript-form');
     const submitButton = document.getElementById('submit-btn');
     const recipientEmailInput = document.getElementById('recipient-email');
@@ -20,67 +17,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set default recipient email
     recipientEmailInput.value = 'brandon.thomas25@compscihigh.org';
 
-    // Handle request type change - FIXED
-    requestTypeSelect.addEventListener('change', function() {
-        const selectedValue = this.value;
-        
-        console.log('Request type changed to:', selectedValue);
-
-        if (selectedValue === 'send') {
-            // Show file upload for sending transcripts
-            fileUploadGroup.classList.add('show');
-            transcriptFileInput.setAttribute('required', 'required');
-            submitButton.textContent = 'Send Transcript';
-        } else if (selectedValue === 'request') {
-            // Hide file upload for requesting transcripts
-            fileUploadGroup.classList.remove('show');
-            transcriptFileInput.removeAttribute('required');
-            transcriptFileInput.value = '';
-            submitButton.textContent = 'Request Transcript';
-        } else {
-            // Default state
-            fileUploadGroup.classList.remove('show');
-            transcriptFileInput.removeAttribute('required');
-            transcriptFileInput.value = '';
-            submitButton.textContent = 'Submit Request';
-        }
-    });
-
-    // File input validation
-    transcriptFileInput.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file) {
-            const allowedTypes = [
-                'application/pdf',
-                'application/msword',
-                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                'image/jpeg',
-                'image/jpg',
-                'image/png'
-            ];
-            const maxSize = 10 * 1024 * 1024; // 10MB
-
-            if (!allowedTypes.includes(file.type)) {
-                showMessage('Please select a valid file type (PDF, DOC, DOCX, JPG, PNG).', 'error');
-                this.value = '';
-                return;
-            }
-
-            if (file.size > maxSize) {
-                showMessage('File size must be less than 10MB.', 'error');
-                this.value = '';
-                return;
-            }
-
-            showMessage(`File "${file.name}" selected successfully.`, 'success');
-        }
-    });
-
     // Rate limiting to prevent spam
     let lastSubmissionTime = 0;
     const SUBMISSION_COOLDOWN = 30000; // 30 seconds between submissions
 
-    // Handle form submission with EmailJS - FIXED
+    // Handle form submission with EmailJS
     form.addEventListener('submit', async function(e) {
         e.preventDefault(); // Always prevent default form submission
 
@@ -94,12 +35,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Get form data for validation
         const formData = {
-            requestType: requestTypeSelect.value,
             fullName: document.getElementById('full-name').value,
             graduationYear: document.getElementById('graduation-year').value,
             userEmail: document.getElementById('email').value,
-            recipientEmail: recipientEmailInput.value,
-            file: transcriptFileInput.files[0] || null
+            recipientEmail: recipientEmailInput.value
         };
 
         // Validate form before submission
@@ -113,24 +52,14 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             // Prepare email data
             const emailData = {
-                request_type: formData.requestType,
+                request_type: 'request',
                 full_name: formData.fullName,
                 graduation_year: formData.graduationYear,
                 user_email: formData.userEmail,
                 recipient_email: formData.recipientEmail,
-                subject: formData.requestType === 'request' 
-                    ? `Transcript Request - ${formData.fullName}`
-                    : `Transcript Submission - ${formData.fullName}`,
+                subject: `Transcript Request - ${formData.fullName}`,
                 message: createEmailMessage(formData)
             };
-
-            // Handle file attachment if present
-            if (formData.file) {
-                const fileBase64 = await fileToBase64(formData.file);
-                emailData.attachment = fileBase64;
-                emailData.file_name = formData.file.name;
-                emailData.file_type = formData.file.type;
-            }
 
             console.log('Sending email with data:', emailData);
 
@@ -145,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (response.status === 200) {
                 lastSubmissionTime = now; // Update last submission time
-                showMessage('Email sent successfully! The recipient should receive it shortly.', 'success');
+                showMessage('Transcript request sent successfully! The recipient should receive it shortly.', 'success');
                 resetForm();
             } else {
                 throw new Error('Failed to send email');
@@ -153,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         } catch (error) {
             console.error('EmailJS Error:', error);
-            let errorMessage = 'Failed to send email. Please try again or contact support.';
+            let errorMessage = 'Failed to send transcript request. Please try again or contact support.';
             
             // More specific error messages
             if (error.text) {
@@ -170,11 +99,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Form validation
     function validateForm(formData) {
-        if (!formData.requestType) {
-            showMessage('Please select a request type.', 'error');
-            return false;
-        }
-
         if (!formData.fullName.trim()) {
             showMessage('Please enter your full name.', 'error');
             return false;
@@ -205,11 +129,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
 
-        if (formData.requestType === 'send' && !formData.file) {
-            showMessage('Please upload a transcript file to send.', 'error');
-            return false;
-        }
-
         return true;
     }
 
@@ -221,10 +140,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Create email message content
     function createEmailMessage(formData) {
-        const isRequest = formData.requestType === 'request';
-        
         let message = `
-${isRequest ? 'TRANSCRIPT REQUEST' : 'TRANSCRIPT SUBMISSION'}
+TRANSCRIPT REQUEST
 
 Student Information:
 - Name: ${formData.fullName}
@@ -233,24 +150,12 @@ Student Information:
 
 Recipient: ${formData.recipientEmail}
 
-${isRequest 
-    ? 'This is a request for transcript delivery. Please process this request and send the transcript to the recipient email address above.'
-    : 'A transcript document has been attached to this email for delivery to the recipient.'}
+This is a request for transcript delivery. Please process this request and send the transcript to the recipient email address above.
 
-Please contact ${formData.userEmail} if you have any questions about this ${isRequest ? 'request' : 'submission'}.
+Please contact ${formData.userEmail} if you have any questions about this request.
         `.trim();
 
         return message;
-    }
-
-    // Convert file to base64 for email attachment
-    function fileToBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-        });
     }
 
     // Set loading state
@@ -260,14 +165,7 @@ Please contact ${formData.userEmail} if you have any questions about this ${isRe
         if (isLoading) {
             submitButton.innerHTML = '<span class="loading-spinner"></span>Sending...';
         } else {
-            const requestType = requestTypeSelect.value;
-            if (requestType === 'send') {
-                submitButton.textContent = 'Send Transcript';
-            } else if (requestType === 'request') {
-                submitButton.textContent = 'Request Transcript';
-            } else {
-                submitButton.textContent = 'Submit Request';
-            }
+            submitButton.textContent = 'Request Transcript';
         }
     }
 
@@ -301,9 +199,6 @@ Please contact ${formData.userEmail} if you have any questions about this ${isRe
     // Reset form
     function resetForm() {
         form.reset();
-        fileUploadGroup.classList.remove('show');
-        transcriptFileInput.removeAttribute('required');
-        submitButton.textContent = 'Submit Request';
         submitButton.disabled = false;
         recipientEmailInput.value = 'brandon.thomas25@compscihigh.org';
         
@@ -311,8 +206,4 @@ Please contact ${formData.userEmail} if you have any questions about this ${isRe
         const existingMessages = document.querySelectorAll('.message');
         existingMessages.forEach(msg => msg.remove());
     }
-
-    // Initialize form state - ensure file upload is hidden on load
-    fileUploadGroup.classList.remove('show');
-    transcriptFileInput.removeAttribute('required');
 });
