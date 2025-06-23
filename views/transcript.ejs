@@ -24,7 +24,8 @@
         <div class="page-container transcripts-page fade-in">
             <div class="transcript-form">
                 <h2 class="form-title">Request or Send Transcripts</h2>
-                <form id="transcript-form" action="mailto:brandon.thomas25@compscihigh.org" method="post" enctype="multipart/form-data">
+                <!-- Removed Formspree action to allow EmailJS to work -->
+                <form id="transcript-form">
                     <div class="form-group">
                         <label class="form-label" for="request-type">Request Type</label>
                         <select class="form-select" id="request-type" name="request-type" required>
@@ -66,6 +67,9 @@
             </div>
         </div>
     </div>
+    
+    <!-- EmailJS CDN -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script src="transcript.js"></script>
 </body>
 </html>

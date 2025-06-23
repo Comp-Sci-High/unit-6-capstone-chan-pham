@@ -49,7 +49,7 @@
         </section>
 
         <section id="resources" class="resources">
-            <h2>Resources & Information</h2>
+            <h2>How Can Alumni Success Help You</h2>
             <div class="resources-grid">
                 <div class="resource-card">
                     <div class="resource-icon">
@@ -57,7 +57,7 @@
                     </div>
                     <h3>Academic Support</h3>
                     <p>Access tutoring services, study materials, and academic advisors.</p>
-                    <a href="#" class="btn-secondary">Learn More</a>
+                    
                 </div>
                 <div class="resource-card">
                     <div class="resource-icon">
@@ -65,7 +65,15 @@
                     </div>
                     <h3>Career Services</h3>
                     <p>Resume reviews, interview prep, and job placement assistance.</p>
-                    <a href="#" class="btn-secondary">Learn More</a>
+                    
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h3>Meet With Team</h3>
+                    <p>Resume reviews, interview prep, and job placement assistance.</p>
+                    <a href="https://calendly.com/jay-champagne-compscihigh/30min" class="btn-secondary">Book Meeting</a>
                 </div>
                 <div class="resource-card">
                     <div class="resource-icon">
@@ -73,7 +81,7 @@
                     </div>
                     <h3>Networking Events</h3>
                     <p>Connect with alumni and industry professionals at our events.</p>
-                    <a href="#" class="btn-secondary">Learn More</a>
+                   
                 </div>
                 <div class="resource-card">
                     <div class="resource-icon">
@@ -81,48 +89,32 @@
                     </div>
                     <h3>Scholarships</h3>
                     <p>Find financial support opportunities for continued education.</p>
-                    <a href="#" class="btn-secondary">Learn More</a>
+                   
                 </div>
             </div>
         </section>
 
         <section class="updates">
-            <h2>Latest Updates</h2>
+            <div class="section-header">
+                <h2>Latest Updates</h2>
+                <button class="add-btn" id="add-update-btn" title="Add Update">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
             <div class="update-feed" id="update-feed">
-                <!-- Update items will be inserted here from JS -->
+                <!-- Update items will be populated by JavaScript -->
             </div>
         </section>
 
         <section class="important-info">
-            <h2>Important Information</h2>
-            <div class="info-cards">
-                <div class="info-card">
-                    <h3>Alumni Reunion 2025</h3>
-                    <p>Save the date for our annual reunion happening on June 15-17, 2025. Early registration opens next month!</p>
-                    <div class="info-meta">
-                        <span class="date">May 10, 2025</span>
-                    </div>
-                </div>
-                <div class="info-card">
-                    <h3>New Mentorship Program</h3>
-                    <p>We're launching a revamped mentorship program connecting current students with successful alumni in their fields.</p>
-                    <div class="info-meta">
-                        <span class="date">May 5, 2025</span>
-                    </div>
-                </div><div class="info-card">
-                    <h3>New Mentorship Program</h3>
-                    <p>We're launching a revamped mentorship program connecting current students with successful alumni in their fields.</p>
-                    <div class="info-meta">
-                        <span class="date">May 5, 2025</span>
-                    </div>
-                </div>
-                <div class="info-card">
-                    <h3>Summer Workshops</h3>
-                    <p>Registration is now open for our professional development summer workshops series. Limited spots available!</p>
-                    <div class="info-meta">
-                        <span class="date">April 28, 2025</span>
-                    </div>
-                </div>
+            <div class="section-header">
+                <h2>Important Information</h2>
+                <button class="add-btn" id="add-info-btn" title="Add Information">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            <div class="info-cards" id="info-cards">
+                <!-- Info cards will be populated by JavaScript -->
             </div>
         </section>
     </main>
@@ -141,14 +133,12 @@
                     <a href="faq.html">FAQ</a>
                 </div>
                 <div class="link-group">
-                    <h3>Resources</h3>
-                    <a href="#">Career Services</a>
-                    <a href="#">Networking</a>
-                    <a href="#">Events</a>
+                   
+                    
                 </div>
                 <div class="link-group">
                     <h3>Contact</h3>
-                    <a href="mailto:alumni@example.com">alumni@example.com</a>
+                    <a href="jay.champagne@compscihigh.org">jay.champagne@compscihigh.org</a>
                     <a href="tel:+11234567890">+1 (123) 456-7890</a>
                 </div>
             </div>
@@ -156,13 +146,110 @@
                 <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                 <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
                 <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="https://chat.google.com/dm/iIDCQCAAAAE/XAZmOM9S2Cw/XAZmOM9S2Cw?cls=10"><i class="fab fa-instagram"></i></a>
             </div>
         </div>
         <div class="footer-bottom">
             <p>&copy; 2025 Alumni Success. All rights reserved.</p>
         </div>
     </footer>
+
+    <!-- Admin Password Modal -->
+    <div id="admin-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Admin Access Required</h2>
+                <button class="close-btn" id="close-admin-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="admin-form">
+                    <div class="form-group">
+                        <label for="admin-password">Enter Admin Password:</label>
+                        <input type="password" id="admin-password" name="password" required>
+                        <div id="password-error" class="error-message" style="display: none;">
+                            Incorrect password. Please try again.
+                        </div>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="button" class="btn-form secondary" id="cancel-admin">Cancel</button>
+                        <button type="submit" class="btn-form primary">Access Admin</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Modal -->
+    <div id="update-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="update-modal-title">Add Update</h2>
+                <button class="close-btn" id="close-update-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="update-form">
+                    <div class="form-group">
+                        <label for="update-title">Title</label>
+                        <input type="text" id="update-title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-content">Content</label>
+                        <textarea id="update-content" name="content" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="update-date">Date</label>
+                        <input type="date" id="update-date" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="update-important" name="important">
+                            <label for="update-important">Mark as Important</label>
+                        </div>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="button" class="btn-form secondary" id="cancel-update">Cancel</button>
+                        <button type="submit" class="btn-form primary">Save Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="info-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="info-modal-title">Add Information</h2>
+                <button class="close-btn" id="close-info-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="info-form">
+                    <div class="form-group">
+                        <label for="info-title">Title</label>
+                        <input type="text" id="info-title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="info-content">Content</label>
+                        <textarea id="info-content" name="content" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="info-date">Date</label>
+                        <input type="date" id="info-date" name="date" required>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="button" class="btn-form secondary" id="cancel-info">Cancel</button>
+                        <button type="submit" class="btn-form primary">Save Information</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <script src="home.js"></script>
 </body>

@@ -1,4 +1,14 @@
+// EmailJS Configuration
+const EMAILJS_CONFIG = {
+    PUBLIC_KEY: 'xyULo6OElxKrIjRxQ',      // Your EmailJS public key
+    SERVICE_ID: 'service_wv9ojz2',        // Your EmailJS service ID
+    TEMPLATE_ID: 'template_xufwfvh'       // Your EmailJS template ID
+};
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize EmailJS
+    emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
+
     // Get all form elements
     const requestTypeSelect = document.getElementById('request-type');
     const fileUploadGroup = document.getElementById('file-upload-group');
@@ -10,12 +20,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set default recipient email
     recipientEmailInput.value = 'brandon.thomas25@compscihigh.org';
 
-    // Handle request type change
+    // Handle request type change - FIXED
     requestTypeSelect.addEventListener('change', function() {
         const selectedValue = this.value;
         
         console.log('Request type changed to:', selectedValue);
-        
+
         if (selectedValue === 'send') {
             // Show file upload for sending transcripts
             fileUploadGroup.classList.add('show');
@@ -31,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Default state
             fileUploadGroup.classList.remove('show');
             transcriptFileInput.removeAttribute('required');
+            transcriptFileInput.value = '';
             submitButton.textContent = 'Submit Request';
         }
     });
@@ -65,11 +76,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Handle form submission
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Get form data
+    // Rate limiting to prevent spam
+    let lastSubmissionTime = 0;
+    const SUBMISSION_COOLDOWN = 30000; // 30 seconds between submissions
+
+    // Handle form submission with EmailJS - FIXED
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault(); // Always prevent default form submission
+
+        // Check rate limiting
+        const now = Date.now();
+        if (now - lastSubmissionTime < SUBMISSION_COOLDOWN) {
+            const remainingTime = Math.ceil((SUBMISSION_COOLDOWN - (now - lastSubmissionTime)) / 1000);
+            showMessage(`Please wait ${remainingTime} seconds before submitting again.`, 'error');
+            return;
+        }
+
+        // Get form data for validation
         const formData = {
             requestType: requestTypeSelect.value,
             fullName: document.getElementById('full-name').value,
@@ -79,24 +102,70 @@ document.addEventListener('DOMContentLoaded', function() {
             file: transcriptFileInput.files[0] || null
         };
 
-        // Validate form
+        // Validate form before submission
         if (!validateForm(formData)) {
             return;
         }
 
-        // Create email content
-        const emailContent = createEmailContent(formData);
-        
-        // Send email using mailto (for client-side solution)
-        sendEmailViaMailto(emailContent, formData);
-        
-        // Show success message
-        showMessage('Email client opened. Please send the email from your email application.', 'success');
-        
-        // Reset form after delay
-        setTimeout(() => {
-            resetForm();
-        }, 2000);
+        // Show loading state
+        setLoadingState(true);
+
+        try {
+            // Prepare email data
+            const emailData = {
+                request_type: formData.requestType,
+                full_name: formData.fullName,
+                graduation_year: formData.graduationYear,
+                user_email: formData.userEmail,
+                recipient_email: formData.recipientEmail,
+                subject: formData.requestType === 'request' 
+                    ? `Transcript Request - ${formData.fullName}`
+                    : `Transcript Submission - ${formData.fullName}`,
+                message: createEmailMessage(formData)
+            };
+
+            // Handle file attachment if present
+            if (formData.file) {
+                const fileBase64 = await fileToBase64(formData.file);
+                emailData.attachment = fileBase64;
+                emailData.file_name = formData.file.name;
+                emailData.file_type = formData.file.type;
+            }
+
+            console.log('Sending email with data:', emailData);
+
+            // Send email using EmailJS
+            const response = await emailjs.send(
+                EMAILJS_CONFIG.SERVICE_ID,
+                EMAILJS_CONFIG.TEMPLATE_ID,
+                emailData
+            );
+
+            console.log('EmailJS response:', response);
+
+            if (response.status === 200) {
+                lastSubmissionTime = now; // Update last submission time
+                showMessage('Email sent successfully! The recipient should receive it shortly.', 'success');
+                resetForm();
+            } else {
+                throw new Error('Failed to send email');
+            }
+
+        } catch (error) {
+            console.error('EmailJS Error:', error);
+            let errorMessage = 'Failed to send email. Please try again or contact support.';
+            
+            // More specific error messages
+            if (error.text) {
+                errorMessage = `Error: ${error.text}`;
+            } else if (error.message) {
+                errorMessage = `Error: ${error.message}`;
+            }
+            
+            showMessage(errorMessage, 'error');
+        } finally {
+            setLoadingState(false);
+        }
     });
 
     // Form validation
@@ -111,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
 
-        if (!formData.graduationYear || formData.graduationYear < 1900 || formData.graduationYear > new Date().getFullYear()) {
+        if (!formData.graduationYear || formData.graduationYear < 1900 || formData.graduationYear > new Date().getFullYear() + 5) {
             showMessage('Please enter a valid graduation year.', 'error');
             return false;
         }
@@ -121,8 +190,18 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
 
+        if (!isValidEmail(formData.userEmail)) {
+            showMessage('Please enter a valid email address.', 'error');
+            return false;
+        }
+
         if (!formData.recipientEmail.trim()) {
             showMessage('Please enter recipient email address.', 'error');
+            return false;
+        }
+
+        if (!isValidEmail(formData.recipientEmail)) {
+            showMessage('Please enter a valid recipient email address.', 'error');
             return false;
         }
 
@@ -134,44 +213,62 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
-    // Create email content
-    function createEmailContent(formData) {
-        const isRequest = formData.requestType === 'request';
-        const subject = isRequest 
-            ? `Transcript Request - ${formData.fullName}`
-            : `Transcript Submission - ${formData.fullName}`;
-
-        const body = `
-Hello,
-
-${isRequest ? 'I am requesting' : 'I am sending'} my transcript with the following details:
-
-Full Name: ${formData.fullName}
-Graduation Year: ${formData.graduationYear}
-Email Address: ${formData.userEmail}
-Request Type: ${isRequest ? 'Request Transcript' : 'Send Transcript'}
-
-${isRequest 
-    ? 'Please send my transcript to the email address provided above.' 
-    : 'Please find my transcript attached to this email.'}
-
-Thank you for your assistance.
-
-Best regards,
-${formData.fullName}
-        `.trim();
-
-        return { subject, body };
+    // Email validation helper
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
     }
 
-    // Send email via mailto
-    function sendEmailViaMailto(emailContent, formData) {
-        const encodedSubject = encodeURIComponent(emailContent.subject);
-        const encodedBody = encodeURIComponent(emailContent.body);
-        const mailtoLink = `mailto:${formData.recipientEmail}?subject=${encodedSubject}&body=${encodedBody}`;
+    // Create email message content
+    function createEmailMessage(formData) {
+        const isRequest = formData.requestType === 'request';
         
-        // Open default email client
-        window.location.href = mailtoLink;
+        let message = `
+${isRequest ? 'TRANSCRIPT REQUEST' : 'TRANSCRIPT SUBMISSION'}
+
+Student Information:
+- Name: ${formData.fullName}
+- Graduation Year: ${formData.graduationYear}
+- Email: ${formData.userEmail}
+
+Recipient: ${formData.recipientEmail}
+
+${isRequest 
+    ? 'This is a request for transcript delivery. Please process this request and send the transcript to the recipient email address above.'
+    : 'A transcript document has been attached to this email for delivery to the recipient.'}
+
+Please contact ${formData.userEmail} if you have any questions about this ${isRequest ? 'request' : 'submission'}.
+        `.trim();
+
+        return message;
+    }
+
+    // Convert file to base64 for email attachment
+    function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    }
+
+    // Set loading state
+    function setLoadingState(isLoading) {
+        submitButton.disabled = isLoading;
+        
+        if (isLoading) {
+            submitButton.innerHTML = '<span class="loading-spinner"></span>Sending...';
+        } else {
+            const requestType = requestTypeSelect.value;
+            if (requestType === 'send') {
+                submitButton.textContent = 'Send Transcript';
+            } else if (requestType === 'request') {
+                submitButton.textContent = 'Request Transcript';
+            } else {
+                submitButton.textContent = 'Submit Request';
+            }
+        }
     }
 
     // Show message to user
@@ -196,6 +293,9 @@ ${formData.fullName}
                 }
             }, 5000);
         }
+
+        // Scroll to message
+        messageDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
     // Reset form
@@ -204,6 +304,7 @@ ${formData.fullName}
         fileUploadGroup.classList.remove('show');
         transcriptFileInput.removeAttribute('required');
         submitButton.textContent = 'Submit Request';
+        submitButton.disabled = false;
         recipientEmailInput.value = 'brandon.thomas25@compscihigh.org';
         
         // Remove any existing messages
@@ -211,6 +312,7 @@ ${formData.fullName}
         existingMessages.forEach(msg => msg.remove());
     }
 
-    // Initialize form state
+    // Initialize form state - ensure file upload is hidden on load
     fileUploadGroup.classList.remove('show');
+    transcriptFileInput.removeAttribute('required');
 });
